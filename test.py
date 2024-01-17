@@ -46,38 +46,41 @@ for file in os.scandir(currentDirPath):
     splitStr = fileNameString.split()
     imgFolder = splitStr[1] #JPEG-2000-under2MB
 
-    #for subFolder in os.scandir(path):
     if imgFolder == "'JPEG-4800-under7MB'":
-        for subFile in os.scandir(testLargeJpgDirPath):
-            artistInventoryNumber = str(subFile)[11:22] #snip off inventory num of filename 
+        for file in os.scandir(testLargeJpgDirPath):
+            artistInventoryNumber = str(file)[11:22] #snip off inventory num of filename 
             inventoryNumberFolder = os.path.join(currentDirPath, artistInventoryNumber)
-                     
+            print(inventoryNumberFolder)
+            
             if not os.path.exists(inventoryNumberFolder):
                 os.makedirs(inventoryNumberFolder)
-            lowResJPGFolder = os.path.join(currentDirPath, artistInventoryNumber, 'Low Res')
+            
+            lowResJPGFolder = os.path.join(inventoryNumberFolder, 'Low Res')
             if not os.path.exists(lowResJPGFolder): 
                 os.makedirs(lowResJPGFolder)
-            highResJPGFolder = os.path.join(currentDirPath, artistInventoryNumber, 'High Res')
+            
+            highResJPGFolder = os.path.join(inventoryNumberFolder, 'High Res')
             if not os.path.exists(highResJPGFolder):
                 os.makedirs(highResJPGFolder)
-            tiffFolder = os.path.join(currentDirPath, artistInventoryNumber, 'TIFF')
+
+            tiffFolder = os.path.join(inventoryNumberFolder, 'TIFF')
             if not os.path.exists(tiffFolder):
                 os.makedirs(tiffFolder)
 
-            shutil.move(subFile, highResJPGFolder)
-    
+            shutil.move(file, highResJPGFolder)
+
     if imgFolder == "'JPEG-2000-under2MB'":
-        for subFile in os.scandir(testSmallJpgDirPath):
-            shutil.move(subFile, lowResJPGFolder)
+        for file in os.scandir(testSmallJpgDirPath):
+            shutil.move(file, lowResJPGFolder)
     if imgFolder == "'TIFF'":
-        for subFile in os.scandir(testTiffDirPath):
-            shutil.move(subFile, tiffFolder)
+        for file in os.scandir(testTiffDirPath):
+            shutil.move(file, tiffFolder)
 
 ######
 ######
 #Trial code for solution based on proper downloaded file format. Works. Need to reduce repetitive code.
 #Push #2
-"""""
+""""
 for file in os.scandir(currentDirPath):
     #fileNameString = str(file) #convert file name to string
     #fileSizeFolder = fileNameString[11:29] #JPEG-2000-under2MB
