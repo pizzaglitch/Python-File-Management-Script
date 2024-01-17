@@ -42,39 +42,48 @@ testTiffDirPath = os.path.join(currentDirPath, 'TIFF')
 #splits folder names to get image folder (smart fix)
 #Uses string length to get inventory name (original, brute fix. could cause issues if files are misnamed)
 #does not move more than one high res image
+
 for file in os.scandir(currentDirPath):
     fileNameString = str(file)[:-1] #convert file name to string
     splitStr = fileNameString.split()
     imgFolder = splitStr[1] #'JPEG-2000-under2MB'
     if imgFolder == "'JPEG-4800-under7MB'":
-        for file in os.scandir(testLargeJpgDirPath):
-            artistInventoryNumber = str(file)[11:22] #snip off inventory num of filename 
+        for subfile in os.scandir(testLargeJpgDirPath):
+            artistInventoryNumber = str(subfile)[11:22] #snip off inventory num of filename 
             inventoryNumberFolder = os.path.join(currentDirPath, artistInventoryNumber)
             
             if not os.path.exists(inventoryNumberFolder):
                 os.makedirs(inventoryNumberFolder)
-            
-            lowResJPGFolder = os.path.join(currentDirPath, inventoryNumberFolder, 'Low Res')
-            if not os.path.exists(lowResJPGFolder): 
-                os.makedirs(lowResJPGFolder)
-            
             highResJPGFolder = os.path.join(currentDirPath, artistInventoryNumber, 'High Res')
             if not os.path.exists(highResJPGFolder):
                 os.makedirs(highResJPGFolder)
-                shutil.move(file, highResJPGFolder)
+            shutil.move(subfile, highResJPGFolder)
+      
+    if imgFolder == "'JPEG-2000-under2MB'":
+        for subfile in os.scandir(testSmallJpgDirPath):
+            artistInventoryNumber = str(subfile)[11:22]  
+            inventoryNumberFolder = os.path.join(currentDirPath, artistInventoryNumber)
+            if not os.path.exists(inventoryNumberFolder):
+                os.makedirs(inventoryNumberFolder)
 
-            tiffFolder = os.path.join(currentDirPath, inventoryNumberFolder, 'TIFF')
+            lowResJPGFolder = os.path.join(currentDirPath, artistInventoryNumber, 'Low Res')
+            if not os.path.exists(lowResJPGFolder): 
+                os.makedirs(lowResJPGFolder)
+        
+            shutil.move(subfile, lowResJPGFolder)
+    if imgFolder == "'TIFF'":
+        for subfile in os.scandir(testTiffDirPath):
+            artistInventoryNumber = str(subfile)[11:22] 
+            inventoryNumberFolder = os.path.join(currentDirPath, artistInventoryNumber)
+            if not os.path.exists(inventoryNumberFolder):
+                os.makedirs(inventoryNumberFolder)
+                
+            tiffFolder = os.path.join(currentDirPath, artistInventoryNumber, 'TIFF')
             if not os.path.exists(tiffFolder):
                 os.makedirs(tiffFolder)
-            
-        shutil.move(file, highResJPGFolder)
 
-    if imgFolder == "'JPEG-2000-under2MB'":
-        for file in os.scandir(testSmallJpgDirPath):
-            shutil.move(file, lowResJPGFolder)
-    if imgFolder == "'TIFF'":
-        for file in os.scandir(testTiffDirPath):
-            shutil.move(file, tiffFolder)
+            shutil.move(subfile, tiffFolder)
+    
 
 #Delete old, empty folders when done
 """
@@ -90,7 +99,7 @@ os.rmdir(testTiffPath)
 ######
 #Trial code for solution based on proper downloaded file format. Works. Need to reduce repetitive code.
 #Push #2
-""""
+"""
 for file in os.scandir(currentDirPath):
     #fileNameString = str(file) #convert file name to string
     #fileSizeFolder = fileNameString[11:29] #JPEG-2000-under2MB
@@ -101,7 +110,7 @@ for file in os.scandir(currentDirPath):
     imgFolder = splitStr[1] #JPEG-2000-under2MB
 
     #for subFolder in os.scandir(path):
-    if imgFolder == "'JPEG-2000-under2MB'":
+    if imgFolder == 'JPEG-2000-under2MB':
         for subFile in os.scandir(testSmallJpgDirPath):
             artistInventoryNumber = str(subFile)[11:22] #snip off inventory num of filename 
             inventoryNumberFolder = os.path.join(currentDirPath, artistInventoryNumber)
@@ -120,7 +129,7 @@ for file in os.scandir(currentDirPath):
             
             shutil.move(subFile, lowResJPGFolder)
 
-    if imgFolder == "'JPEG-4800-under7MB'":
+    if imgFolder == 'JPEG-4800-under7MB':
         for subFile in os.scandir(testLargeJpgDirPath):
             artistInventoryNumber = str(subFile)[11:22] #snip off inventory num of filename 
             inventoryNumberFolder = os.path.join(currentDirPath, artistInventoryNumber)
