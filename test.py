@@ -41,33 +41,33 @@ testTiffDirPath = os.path.join(currentDirPath, 'TIFF')
 #Trial 3 (Remove repetition, fix edge cases)
 #splits folder names to get image folder (smart fix)
 #Uses string length to get inventory name (original, brute fix. could cause issues if files are misnamed)
+#does not move more than one high res image
 for file in os.scandir(currentDirPath):
     fileNameString = str(file)[:-1] #convert file name to string
     splitStr = fileNameString.split()
-    imgFolder = splitStr[1] #JPEG-2000-under2MB
-
+    imgFolder = splitStr[1] #'JPEG-2000-under2MB'
     if imgFolder == "'JPEG-4800-under7MB'":
         for file in os.scandir(testLargeJpgDirPath):
             artistInventoryNumber = str(file)[11:22] #snip off inventory num of filename 
             inventoryNumberFolder = os.path.join(currentDirPath, artistInventoryNumber)
-            print(inventoryNumberFolder)
             
             if not os.path.exists(inventoryNumberFolder):
                 os.makedirs(inventoryNumberFolder)
             
-            lowResJPGFolder = os.path.join(inventoryNumberFolder, 'Low Res')
+            lowResJPGFolder = os.path.join(currentDirPath, inventoryNumberFolder, 'Low Res')
             if not os.path.exists(lowResJPGFolder): 
                 os.makedirs(lowResJPGFolder)
             
-            highResJPGFolder = os.path.join(inventoryNumberFolder, 'High Res')
+            highResJPGFolder = os.path.join(currentDirPath, artistInventoryNumber, 'High Res')
             if not os.path.exists(highResJPGFolder):
                 os.makedirs(highResJPGFolder)
+                shutil.move(file, highResJPGFolder)
 
-            tiffFolder = os.path.join(inventoryNumberFolder, 'TIFF')
+            tiffFolder = os.path.join(currentDirPath, inventoryNumberFolder, 'TIFF')
             if not os.path.exists(tiffFolder):
                 os.makedirs(tiffFolder)
-
-            shutil.move(file, highResJPGFolder)
+            
+        shutil.move(file, highResJPGFolder)
 
     if imgFolder == "'JPEG-2000-under2MB'":
         for file in os.scandir(testSmallJpgDirPath):
@@ -75,6 +75,16 @@ for file in os.scandir(currentDirPath):
     if imgFolder == "'TIFF'":
         for file in os.scandir(testTiffDirPath):
             shutil.move(file, tiffFolder)
+
+#Delete old, empty folders when done
+"""
+testSmallJpgPath = os.path.join(currentDirPath, 'JPEG-2000-under2MB')
+testLargeJpgPath = os.path.join(currentDirPath, 'JPEG-4800-under7MB')
+testTiffPath = os.path.join(currentDirPath, 'TIFF')
+os.rmdir(testSmallJpgPath)
+os.rmdir(testLargeJpgPath)
+os.rmdir(testTiffPath)
+"""
 
 ######
 ######
@@ -201,9 +211,5 @@ testTiffPath = os.path.join(path, 'TIFF')
 #File Size Variables
 maxSmallFileSize = 2000000
 maxLargeFileSize = 7100000
-
-#Delete old, empty folders when done
-os.rmdir(testSmallJpgPath)
-os.rmdir(testLargeJpgPath)
-os.rmdir(testTiffPath)
 """
+
