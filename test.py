@@ -57,8 +57,9 @@ for file in os.scandir(currentDirPath):
             highResJPGFolder = os.path.join(currentDirPath, artistInventoryNumber, 'High Res')
             if not os.path.exists(highResJPGFolder):
                 os.makedirs(highResJPGFolder)
+            
             shutil.move(subfile, highResJPGFolder)
-      
+
     if imgFolder == "'JPEG-2000-under2MB'":
         for subfile in os.scandir(testSmallJpgDirPath):
             artistInventoryNumber = str(subfile)[11:22]  
@@ -69,8 +70,9 @@ for file in os.scandir(currentDirPath):
             lowResJPGFolder = os.path.join(currentDirPath, artistInventoryNumber, 'Low Res')
             if not os.path.exists(lowResJPGFolder): 
                 os.makedirs(lowResJPGFolder)
-        
+
             shutil.move(subfile, lowResJPGFolder)
+
     if imgFolder == "'TIFF'":
         for subfile in os.scandir(testTiffDirPath):
             artistInventoryNumber = str(subfile)[11:22] 
@@ -82,6 +84,7 @@ for file in os.scandir(currentDirPath):
             if not os.path.exists(tiffFolder):
                 os.makedirs(tiffFolder)
 
+            
             shutil.move(subfile, tiffFolder)
     
 
